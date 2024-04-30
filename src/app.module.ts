@@ -17,7 +17,16 @@ import { UsersModule } from './users/users.module';
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      // name: ConfigService.get<string>('DB_NAME'),
+      useFactory: (config: ConfigService) => ({
+        type: 'postgres',
+        host: config.get<string>('DB_HOST'),
+        port: parseInt(config.get<string>('DB_PORT'), 10),
+        username: config.get<string>('DB_USERNAME'),
+        password: config.get<string>('DB_PASSWORD'),
+        database: config.get<string>('DB_NAME'),
+        entities: [],
+        synchronize: true,
+      }),
     }),
   ],
   controllers: [AppController],
